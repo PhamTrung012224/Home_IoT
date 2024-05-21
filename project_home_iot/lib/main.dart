@@ -1,6 +1,12 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Color.fromARGB(255, 34, 34, 36),
+  ));
   runApp(const MyApp());
 }
 
@@ -13,113 +19,266 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 34, 34, 36),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const OnboardingPage(),
+        '/home': (context) => const HomePage(),
+        '/usageMeter': (context) => const UsageMeterPage(),
+        '/fanAdjustments': (context) => const FanAdjustmentsPage(),
+        '/runningDevices': (context) => const RunningDevicesPage(),
+        '/lightAdjustments': (context) => const LightAdjustmentsPage(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+//On Boarding Page
+class OnboardingPage extends StatefulWidget {
+  const OnboardingPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _OnboardingPageState extends State<OnboardingPage> {
+  int _start = 5;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    Timer.periodic(oneSec, (timer) {
+      if (_start == 0) {
+        timer.cancel();
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
     });
   }
 
   @override
+  void initState() {
+    _startTimer();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
+          alignment: Alignment.center,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(image: AssetImage('assets/images/OBIcon.png')),
+            ],
+          )),
     );
+  }
+}
+
+//Home Page
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          wigetH1(context),
+          wigetH2(context),
+          wigetH3(context),
+          wigetH4(context)
+        ],
+      ),
+    );
+  }
+}
+
+//Widget 1
+Widget wigetH1(BuildContext context) {
+  return Container(
+    color: Colors.blue,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.of(context).size.height * 0.1,
+      maxWidth: MediaQuery.of(context).size.width,
+    ),
+  );
+}
+
+Widget wigetH2(BuildContext context) {
+  return Container(
+    color: Colors.green,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.of(context).size.height * 0.4,
+      maxWidth: MediaQuery.of(context).size.width,
+    ),
+  );
+}
+
+Widget wigetH3(BuildContext context) {
+  return Container(
+    color: Colors.yellow,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.of(context).size.height * 0.07,
+      maxWidth: MediaQuery.of(context).size.width,
+    ),
+  );
+}
+
+Widget wigetH4(BuildContext context) {
+  return Container(
+    color: Colors.red,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.of(context).size.height * 0.43,
+      maxWidth: MediaQuery.of(context).size.width,
+    ),
+  );
+}
+
+//Usage Meter Page
+class UsageMeterPage extends StatefulWidget {
+  const UsageMeterPage({super.key});
+
+  @override
+  State<UsageMeterPage> createState() => _UsageMeterPageState();
+}
+
+class _UsageMeterPageState extends State<UsageMeterPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Align(
+      alignment: Alignment.topCenter,
+      child: ElevatedButton(
+          onPressed: () => {Navigator.pushNamed(context, '/home')},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 32, 108, 213)),
+          ),
+          child: Text(
+            'Return',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: GoogleFonts.roboto().fontFamily,
+            ),
+          )),
+    ));
+  }
+}
+
+//Fan Adjustments Page
+class FanAdjustmentsPage extends StatefulWidget {
+  const FanAdjustmentsPage({super.key});
+
+  @override
+  State<FanAdjustmentsPage> createState() => _FanAdjustmentsPageState();
+}
+
+class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Align(
+      alignment: Alignment.topCenter,
+      child: ElevatedButton(
+          onPressed: () => {Navigator.pushNamed(context, '/home')},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 32, 108, 213)),
+          ),
+          child: Text(
+            'Return',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: GoogleFonts.roboto().fontFamily,
+            ),
+          )),
+    ));
+  }
+}
+
+//Running Devices Page
+class RunningDevicesPage extends StatefulWidget {
+  const RunningDevicesPage({super.key});
+
+  @override
+  State<RunningDevicesPage> createState() => _RunningDevicesPageState();
+}
+
+class _RunningDevicesPageState extends State<RunningDevicesPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Align(
+      alignment: Alignment.topCenter,
+      child: ElevatedButton(
+          onPressed: () => {Navigator.pushNamed(context, '/home')},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 32, 108, 213)),
+          ),
+          child: Text(
+            'Return',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: GoogleFonts.roboto().fontFamily,
+            ),
+          )),
+    ));
+  }
+}
+
+//Light Adjustments Page
+class LightAdjustmentsPage extends StatefulWidget {
+  const LightAdjustmentsPage({super.key});
+
+  @override
+  State<LightAdjustmentsPage> createState() => _LightAdjustmentsPageState();
+}
+
+class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Align(
+      alignment: Alignment.topCenter,
+      child: ElevatedButton(
+          onPressed: () => {Navigator.pushNamed(context, '/home')},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 32, 108, 213)),
+          ),
+          child: Text(
+            'Return',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: GoogleFonts.roboto().fontFamily,
+            ),
+          )),
+    ));
   }
 }
