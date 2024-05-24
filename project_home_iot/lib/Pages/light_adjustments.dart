@@ -155,6 +155,13 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
             child: Column(
               children: [
                 ColorPicker(
+                  // ignore: deprecated_member_use
+                  labelTextStyle: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
+                  ),
                   pickerAreaBorderRadius: BorderRadius.circular(180),
                   pickerColor: colorPicker!,
                   onColorChanged: (value) {
