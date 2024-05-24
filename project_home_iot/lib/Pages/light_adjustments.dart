@@ -1,6 +1,7 @@
 //Light Adjustments Page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LightAdjustmentsPage extends StatefulWidget {
@@ -12,11 +13,13 @@ class LightAdjustmentsPage extends StatefulWidget {
 
 class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
   bool? isOnSwitch;
+  Color? colorPicker;
 
   @override
   void initState() {
     super.initState();
     isOnSwitch = false;
+    colorPicker = Colors.white;
   }
 
   @override
@@ -36,7 +39,8 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
               _renderBtn(context, screenHeight * 0.07, screenWidth),
               _renderTitle(context, screenHeight * 0.07, screenWidth),
               _renderSubTitle(context, screenHeight * 0.1, screenWidth, this),
-              _renderColorPicker(context, screenHeight * 0.76, screenWidth)
+              _renderColorPicker(
+                  context, screenHeight * 0.76, screenWidth, this)
             ],
           ),
         ));
@@ -117,7 +121,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
             Container(
               constraints: BoxConstraints(
                 maxHeight: height,
-                maxWidth: width * 0.5,
+                maxWidth: width * 0.5 + 20,
               ),
               alignment: Alignment.centerRight,
               child: Switch(
@@ -134,17 +138,45 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
         ));
   }
 
-  Widget _renderColorPicker(BuildContext context, var height, var width) {
+  Widget _renderColorPicker(BuildContext context, var height, var width,
+      State<LightAdjustmentsPage> state) {
     return Container(
-      constraints: BoxConstraints(maxHeight: height, maxWidth: width),
-      child: Container(
-        constraints: BoxConstraints(maxHeight: height * 0.8, maxWidth: width),
-        margin: const EdgeInsets.fromLTRB(14.0, 12.0, 14.0, 0.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: const Color.fromARGB(255, 34, 34, 36),
-        ),
-      ),
-    );
+        constraints: BoxConstraints(maxHeight: height, maxWidth: width),
+        child: Column(children: [
+          Container(
+            constraints:
+                BoxConstraints(maxHeight: height * 0.8 + 12, maxWidth: width),
+            margin: const EdgeInsets.fromLTRB(14.0, 12.0, 14.0, 0.0),
+            padding: const EdgeInsets.only(top: 20.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: const Color.fromARGB(255, 34, 34, 36),
+            ),
+            child: Column(
+              children: [
+                ColorPicker(
+                  pickerAreaBorderRadius: BorderRadius.circular(180),
+                  pickerColor: colorPicker!,
+                  onColorChanged: (value) {
+                    setState(() {
+                      colorPicker = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: colorPicker,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            constraints: BoxConstraints(
+              maxHeight: height * 0.1,
+              maxWidth: width,
+            ),
+            margin: const EdgeInsets.all(12.0),
+          ),
+        ]));
   }
 }
