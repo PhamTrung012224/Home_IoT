@@ -28,46 +28,34 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
       statusBarColor: Color.fromARGB(255, 21, 21, 21),
     ));
 
-    var screenHeight =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 21, 21, 21),
         body: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _renderBtn(context, screenHeight * 0.07, screenWidth),
-              _renderTitle(context, screenHeight * 0.07, screenWidth),
-              _renderSubTitle(context, screenHeight * 0.1, screenWidth, this),
-              _renderColorPicker(
-                  context, screenHeight * 0.76, screenWidth, this)
+              _renderBtn(context),
+              _renderTitle(context),
+              _renderSubTitle(context, this),
+              Expanded(
+                child: _renderColorPicker(
+                    context, this),
+              )
             ],
           ),
         ));
   }
 
-  Widget _renderBtn(BuildContext context, var height, var width) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: height,
-        maxWidth: width,
-      ),
-      alignment: Alignment.centerLeft,
-      child: IconButton(
-        icon: Image.asset('assets/images/Return.png'),
-        onPressed: () => {Navigator.pushNamed(context, '/home')},
-      ),
+  Widget _renderBtn(BuildContext context) {
+    return IconButton(
+      icon: Image.asset('assets/images/Return.png'),
+      onPressed: () => {Navigator.pushNamed(context, '/home')},
     );
   }
 
-  Widget _renderTitle(BuildContext context, var height, var width) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: height,
-        maxWidth: width,
-      ),
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: 14.0),
+  Widget _renderTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left:12.0,bottom: 14.0),
       child: Text(
         'Light Adjustments',
         style: TextStyle(
@@ -80,18 +68,14 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
     );
   }
 
-  Widget _renderSubTitle(BuildContext context, var height, var width,
+  Widget _renderSubTitle(BuildContext context,
       State<LightAdjustmentsPage> state) {
-    return Container(
-        constraints: BoxConstraints(
-          maxHeight: height,
-          maxWidth: width,
-        ),
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 14.0),
-        child: Row(
-          children: [
-            Column(
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left:12.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -118,72 +102,51 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                     )),
               ],
             ),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: height,
-                maxWidth: width * 0.5 + 20,
-              ),
-              alignment: Alignment.centerRight,
-              child: Switch(
-                value: isOnSwitch!,
-                onChanged: (value) {
-                  setState(() {
-                    isOnSwitch = value;
-                  });
-                },
-                activeColor: const Color.fromARGB(255, 5, 255, 51),
-              ),
-            ),
-          ],
-        ));
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right:12.0),
+          child: Switch(
+            value: isOnSwitch!,
+            onChanged: (value) {
+              setState(() {
+                isOnSwitch = value;
+              });
+            },
+            activeColor: const Color.fromARGB(255, 5, 255, 51),
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget _renderColorPicker(BuildContext context, var height, var width,
+  Widget _renderColorPicker(BuildContext context,
       State<LightAdjustmentsPage> state) {
-    return Container(
-        constraints: BoxConstraints(maxHeight: height, maxWidth: width),
-        child: Column(children: [
-          Container(
-            constraints:
-                BoxConstraints(maxHeight: height * 0.8 + 12, maxWidth: width),
-            margin: const EdgeInsets.fromLTRB(14.0, 12.0, 14.0, 0.0),
-            padding: const EdgeInsets.only(top: 20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: const Color.fromARGB(255, 34, 34, 36),
-            ),
-            child: Column(
-              children: [
-                ColorPicker(
-                  // ignore: deprecated_member_use
-                  labelTextStyle: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                  ),
-                  pickerAreaBorderRadius: BorderRadius.circular(180),
-                  pickerColor: colorPicker!,
-                  onColorChanged: (value) {
-                    setState(() {
-                      colorPicker = value;
-                    });
-                  },
-                ),
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom:55.0),
+      child: Container(
+        margin: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+           color: const Color.fromRGBO(34, 34, 36, 1),
+        ),
+        child: ColorPicker(
+          // ignore: deprecated_member_use
+          labelTextStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontFamily: GoogleFonts.poppins().fontFamily,
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: colorPicker,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            constraints: BoxConstraints(
-              maxHeight: height * 0.1,
-              maxWidth: width,
-            ),
-            margin: const EdgeInsets.all(12.0),
-          ),
-        ]));
+          pickerAreaBorderRadius: BorderRadius.circular(180),
+          pickerColor: colorPicker!,
+          onColorChanged: (value) {
+            setState(() {
+              colorPicker = value;
+            });
+          },
+        ),
+      ),
+    );
   }
 }
