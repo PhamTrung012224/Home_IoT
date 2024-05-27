@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_home_iot/shared/constants.dart' as constants;
 
 class RunningDevicesPage extends StatefulWidget {
   const RunningDevicesPage({super.key});
@@ -21,11 +22,11 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 21, 21, 21),
+      statusBarColor: constants.normalBlack,
     ));
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 21, 21, 21),
+        backgroundColor: constants.normalBlack,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,8 +41,8 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
 
   Widget _renderBackBtn(BuildContext context) {
     return IconButton(
-      icon: Image.asset('assets/images/Return.png'),
-      onPressed: () => {Navigator.pushNamed(context, '/home')},
+      icon: Image.asset(constants.returnButton),
+      onPressed: () => {Navigator.pushNamed(context, constants.home)},
     );
   }
 
@@ -52,8 +53,8 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
         'Running Devices',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+          fontWeight: constants.bold,
+          color: constants.normalWhite,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
@@ -64,46 +65,46 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
       State<RunningDevicesPage> state) {
     List<Map<String, String>> listDevices = [
       {
-        "deviceImg": "assets/images/Light.png",
+        "deviceImg": constants.lightBulb,
         "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.lightAdjustments
       },
       {
-        "deviceImg": "assets/images/AC.png",
+        "deviceImg": constants.airConditioner,
         "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.lightAdjustments
       },
       {
-        "deviceImg": "assets/images/fan.png",
+        "deviceImg": constants.fan,
         "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.fanAdjustments
       },
       {
-        "deviceImg": "assets/images/AC.png",
+        "deviceImg": constants.airConditioner,
         "room": "Bedroom",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.lightAdjustments
       },
       {
-        "deviceImg": "assets/images/Light.png",
+        "deviceImg": constants.lightBulb,
         "room": "Balcony",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.lightAdjustments
       },
       {
-        "deviceImg": "assets/images/Light.png",
+        "deviceImg": constants.lightBulb,
         "room": "Kitchen",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": "/lightAdjustments"
+        "to": constants.lightAdjustments
       },
     ];
 
@@ -116,7 +117,7 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: const Color.fromARGB(255, 34, 34, 36),
+              color: constants.lightBlack,
             ),
             margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             padding: const EdgeInsets.only(left: 6.0, top: 12.0),
@@ -141,8 +142,8 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
                         listDevices[index]["room"]!,
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          fontWeight: constants.semiBold,
+                          color: constants.normalWhite,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
                       ),
@@ -150,8 +151,8 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
                         listDevices[index]["time"]!,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          fontWeight: constants.medium,
+                          color: constants.normalWhite,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
                       ),
@@ -159,8 +160,8 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
                         listDevices[index]["access"]!,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white54,
+                          fontWeight: constants.medium,
+                          color: constants.lightGray,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
                       ),

@@ -1,10 +1,9 @@
 //Home Page
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
+import 'package:project_home_iot/shared/constants.dart' as constants;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,13 +16,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 34, 34, 36),
+      statusBarColor: constants.lightBlack,
     ));
     var screenHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
     var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: constants.lightBlack,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: const Color.fromARGB(255, 21, 21, 21),
+        color: constants.normalBlack,
       ),
       constraints: BoxConstraints(
         maxHeight: screenHeight * 0.1,
@@ -59,19 +59,22 @@ class _HomePageState extends State<HomePage> {
                 maxHeight: childrenHeight,maxWidth: screenWidth*0.15),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Color.fromARGB(255, 10, 132, 255),
+              color: constants.normalBlue,
             ),
             margin: const EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 12.0),
           ),
-          Text(
-              'Welcome',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                fontFamily: GoogleFonts.poppins().fontFamily,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+                'Welcome',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: constants.medium,
+                  color: constants.normalWhite,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
               ),
-            ),
+          ),
         ],
       ),
     );
@@ -82,7 +85,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: const Color.fromARGB(255, 21, 21, 21),
+          color: constants.normalBlack,
         ),
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height*0.32,
@@ -113,7 +116,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: const Color.fromARGB(255, 10, 132, 255),
+        color: constants.normalBlue,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -125,8 +128,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text('30',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: constants.semiBold,
+                      color: constants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ),
@@ -138,8 +141,8 @@ class _HomePageState extends State<HomePage> {
               'Temperature',
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
+                fontWeight: constants.normal,
+                color: constants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -153,7 +156,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: const Color.fromARGB(255, 10, 132, 255),
+        color: constants.normalBlue,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -165,8 +168,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text('25',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: constants.semiBold,
+                      color: constants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ),
@@ -178,8 +181,8 @@ class _HomePageState extends State<HomePage> {
               'Illuminance',
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
+                fontWeight: constants.normal,
+                color: constants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -192,7 +195,7 @@ class _HomePageState extends State<HomePage> {
   Widget _renderUsageMeterBtn(BuildContext context) {
     return IconButton(
       alignment: Alignment.topRight,
-      icon: Image.asset('assets/images/Menu.png'),
+      icon: Image.asset(constants.menuButton),
       onPressed: () {
         showModalBottomSheet(
             context: context,
@@ -206,7 +209,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: const Color.fromARGB(255, 10, 132, 255),
+        color: constants.normalBlue,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -215,7 +218,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: const EdgeInsets.only(top:12.0),
               child: Center(
-                child:Image.asset('assets/images/UM.png')
+                child:Image.asset(constants.usageMeterImage)
               ),
             ),
           ),
@@ -225,8 +228,8 @@ class _HomePageState extends State<HomePage> {
               'Usage Meter',
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
+                fontWeight: constants.normal,
+                color: constants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -240,7 +243,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: const Color.fromARGB(255, 10, 132, 255),
+        color: constants.normalBlue,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -252,8 +255,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text('68%',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: constants.semiBold,
+                      color: constants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ),
@@ -265,8 +268,8 @@ class _HomePageState extends State<HomePage> {
               'Humidity',
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
+                fontWeight: constants.normal,
+                color: constants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -278,7 +281,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _renderWeather(BuildContext context) {
     return const Image(
-      image: AssetImage('assets/images/weather.png'),
+      image: AssetImage(constants.weather),
     );
   }
 
@@ -292,14 +295,14 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, '/runningDevices');
+                Navigator.pushNamed(context, constants.runningDevices);
               },
               child: Text(
                 'Running Devices',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+                  fontWeight: constants.medium,
+                  color: constants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
@@ -307,14 +310,14 @@ class _HomePageState extends State<HomePage> {
           ),
           GestureDetector(
             onTap: (){
-              Navigator.pushNamed(context, '/runningDevices');
+              Navigator.pushNamed(context, constants.runningDevices);
             },
             child: Text(
               'View All',
               style: TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
+                fontWeight: constants.normal,
+                color: constants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -330,44 +333,44 @@ class _HomePageState extends State<HomePage> {
       {
         'devices': 'Light',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/Light.png',
+        'image': constants.lightBulb,
         'room': 'Living Room',
-        'to': '/lightAdjustments'
+        'to': constants.lightAdjustments
       },
       {
         'devices': 'AC',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/AC.png',
+        'image': constants.airConditioner,
         'room': 'Living Room',
-        'to': '/lightAdjustments'
+        'to': constants.lightAdjustments
       },
       {
         'devices': 'Fan',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/fan.png',
+        'image': constants.fan,
         'room': 'Living Room',
-        'to': '/fanAdjustments'
+        'to': constants.fanAdjustments
       },
       {
         'devices': 'AC',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/AC.png',
+        'image': constants.airConditioner,
         'room': 'Living Room',
-        'to': '/lightAdjustments'
+        'to': constants.lightAdjustments
       },
       {
         'devices': 'Light',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/Light.png',
+        'image': constants.lightBulb,
         'room': 'Balcony',
-        'to': '/lightAdjustments'
+        'to': constants.lightAdjustments
       },
       {
         'devices': 'Light',
         'time': 'on for last 4 hours',
-        'image': 'assets/images/Light.png',
+        'image': constants.lightBulb,
         'room': 'Kitchen',
-        'to': '/lightAdjustments'
+        'to': constants.lightAdjustments
       },
     ];
     return GridView.builder(
@@ -387,7 +390,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 17, 17, 18),
+                  color: constants.darkBlack,
                 ),
                 margin: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 14.0),
                 padding: const EdgeInsets.only(top: 12.0, left: 12.0,right: 12.0),
@@ -397,14 +400,14 @@ class _HomePageState extends State<HomePage> {
                     Text(listDevices[index]['devices']!,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          fontWeight: constants.medium,
+                          color: constants.normalWhite,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         )),
                     Text(listDevices[index]['time']!,
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: constants.normal,
                           color: const Color.fromARGB(255, 183, 182, 182),
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         )),
@@ -414,8 +417,8 @@ class _HomePageState extends State<HomePage> {
                       child: Text(listDevices[index]['room']!,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
+                            fontWeight: constants.normal,
+                            color: constants.normalWhite,
                             fontFamily: GoogleFonts.poppins().fontFamily,
                           )),
                     ),

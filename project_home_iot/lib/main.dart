@@ -5,7 +5,7 @@ import 'Pages/light_adjustments.dart';
 import 'Pages/on_boarding.dart';
 import 'Pages/running_devices.dart';
 import 'Pages/usage_meter.dart';
-
+import 'shared/constants.dart' as constants;
 
 void main() {
   runApp(const MyApp());
@@ -20,17 +20,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 34, 34, 36),
+        scaffoldBackgroundColor: constants.normalBlack,
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: constants.onBoard,
       routes: {
-        '/': (context) => const OnboardingPage(),
-        '/home': (context) => const HomePage(),
-        '/usageMeter': (context) => const UsageMeterPage(),
-        '/fanAdjustments': (context) => const FanAdjustmentsPage(),
-        '/runningDevices': (context) => const RunningDevicesPage(),
-        '/lightAdjustments': (context) => const LightAdjustmentsPage(),
+        constants.onBoard: (context) => const OnboardingPage(),
+        constants.home: (context) => const HomePage(),
+        constants.usageMeter: (context) => const UsageMeterPage(),
+        constants.fanAdjustments: (context) => const FanAdjustmentsPage(),
+        constants.runningDevices: (context) => const RunningDevicesPage(),
+        constants.lightAdjustments: (context) => const LightAdjustmentsPage(),
       },
     );
   }

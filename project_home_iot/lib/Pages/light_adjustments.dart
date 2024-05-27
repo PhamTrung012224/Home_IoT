@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_home_iot/shared/constants.dart' as constants;
 
 class LightAdjustmentsPage extends StatefulWidget {
   const LightAdjustmentsPage({super.key});
@@ -19,17 +20,17 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
   void initState() {
     super.initState();
     isOnSwitch = false;
-    colorPicker = Colors.white;
+    colorPicker = constants.normalWhite;
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 21, 21, 21),
+      statusBarColor: constants.normalBlack,
     ));
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 21, 21, 21),
+        backgroundColor: constants.normalBlack,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,8 +49,8 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
 
   Widget _renderBtn(BuildContext context) {
     return IconButton(
-      icon: Image.asset('assets/images/Return.png'),
-      onPressed: () => {Navigator.pushNamed(context, '/home')},
+      icon: Image.asset(constants.returnButton),
+      onPressed: () => {Navigator.pushNamed(context, constants.home)},
     );
   }
 
@@ -60,8 +61,8 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
         'Light Adjustments',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+          fontWeight: constants.bold,
+          color: constants.normalWhite,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
@@ -82,22 +83,22 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                 Text('Light- Living Room',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      fontWeight: constants.bold,
+                      color: constants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
                 Text('on for last three hours',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white54,
+                      fontWeight: constants.medium,
+                      color: constants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
                 Text('Consumed 8 units',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white54,
+                      fontWeight: constants.medium,
+                      color: constants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ],
@@ -113,7 +114,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                 isOnSwitch = value;
               });
             },
-            activeColor: const Color.fromARGB(255, 5, 255, 51),
+            activeColor: constants.green,
           ),
         ),
       ],
@@ -130,7 +131,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-             color: const Color.fromRGBO(34, 34, 36, 1),
+             color: constants.lightBlack,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,8 +141,8 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                 child: Text('Colours',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+                  color: constants.normalWhite,
+                  fontWeight: constants.semiBold,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
                 ),
@@ -149,8 +150,8 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
               ColorPicker(
                 // ignore: deprecated_member_use
                 labelTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+                  color: constants.normalWhite,
+                  fontWeight: constants.semiBold,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
                 pickerAreaBorderRadius: BorderRadius.circular(180),

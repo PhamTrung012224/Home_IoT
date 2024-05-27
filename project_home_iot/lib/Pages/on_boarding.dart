@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_home_iot/shared/constants.dart' as constants;
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -13,7 +14,7 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   void _startTimer() {
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, constants.home);
     });
   }
 
@@ -27,21 +28,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 34, 34, 36),
+      statusBarColor: constants.lightBlack,
     ));
-    return Scaffold(
-      body: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height,
-            maxWidth: MediaQuery.of(context).size.width,
-          ),
-          alignment: Alignment.center,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(image: AssetImage('assets/images/OBIcon.png')),
-            ],
-          )),
+    return const Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(image: AssetImage(constants.onBoard)),
+        ],
+      ),
     );
   }
 }
