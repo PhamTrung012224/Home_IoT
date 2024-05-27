@@ -122,29 +122,47 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
 
   Widget _renderColorPicker(BuildContext context,
       State<LightAdjustmentsPage> state) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom:55.0),
-      child: Container(
-        margin: const EdgeInsets.all(12.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-           color: const Color.fromRGBO(34, 34, 36, 1),
-        ),
-        child: ColorPicker(
-          // ignore: deprecated_member_use
-          labelTextStyle: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontFamily: GoogleFonts.poppins().fontFamily,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.1),
+        child: Container(
+          margin: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+             color: const Color.fromRGBO(34, 34, 36, 1),
           ),
-          pickerAreaBorderRadius: BorderRadius.circular(180),
-          pickerColor: colorPicker!,
-          onColorChanged: (value) {
-            setState(() {
-              colorPicker = value;
-            });
-          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top:12.0,left: 12.0,bottom: 12.0),
+                child: Text('Colours',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
+                ),
+              ),
+              ColorPicker(
+                // ignore: deprecated_member_use
+                labelTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
+                pickerAreaBorderRadius: BorderRadius.circular(180),
+                pickerColor: colorPicker!,
+                onColorChanged: (value) {
+                  setState(() {
+                    colorPicker = value;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

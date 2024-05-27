@@ -1,6 +1,8 @@
 //Home Page
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
 
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           color: const Color.fromARGB(255, 21, 21, 21),
         ),
         constraints: BoxConstraints(
-          maxHeight: screenHeight * 0.41,
+          maxHeight: MediaQuery.of(context).size.height*0.32,
           maxWidth: screenWidth,
         ),
         margin: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
@@ -374,11 +376,11 @@ class _HomePageState extends State<HomePage> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 1,
         mainAxisSpacing: 3.0,
-        childAspectRatio: 1.5,
+        childAspectRatio: 2.1,
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.only(bottom:60.0),
+          padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height*0.18),
           child: GestureDetector(
               onTap: () =>
                   {Navigator.pushNamed(context, listDevices[index]['to']!)},

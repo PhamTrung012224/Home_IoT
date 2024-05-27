@@ -26,12 +26,10 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 125, 124, 124),
+      statusBarColor: Colors.transparent,
     ));
     var screenHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top- - MediaQuery.of(context).padding.bottom;
-    var screenWidth = MediaQuery.of(context).size.width;
-    var childrenHeight = screenHeight * 0.7;
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -80,7 +78,7 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left:45.0,top: 8,bottom: 8),
+                padding: EdgeInsets.only(left:MediaQuery.of(context).size.width*0.18,top: 8,bottom: 8),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Colors.white,
