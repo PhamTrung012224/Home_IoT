@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
+import 'package:project_home_iot/presenter/feed_presenter.dart';
 import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final feedPresenter = FeedPresenter();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      feedPresenter.getLatestTemperature();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -56,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             constraints: BoxConstraints(
-                maxHeight: childrenHeight,maxWidth: screenWidth*0.15),
+                maxHeight: childrenHeight, maxWidth: screenWidth * 0.15),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: constants.normalBlue,
@@ -66,14 +78,14 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-                'Welcome',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: constants.medium,
-                  color: constants.normalWhite,
-                  fontFamily: GoogleFonts.poppins().fontFamily,
-                ),
+              'Welcome',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: constants.medium,
+                color: constants.normalWhite,
+                fontFamily: GoogleFonts.poppins().fontFamily,
               ),
+            ),
           ),
         ],
       ),
@@ -88,7 +100,7 @@ class _HomePageState extends State<HomePage> {
           color: constants.normalBlack,
         ),
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height*0.32,
+          maxHeight: MediaQuery.of(context).size.height * 0.32,
           maxWidth: screenWidth,
         ),
         margin: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
@@ -98,58 +110,60 @@ class _HomePageState extends State<HomePage> {
           crossAxisSpacing: 11,
           crossAxisCount: 3,
           children: [
-            _renderTemperature(
-                context),
-            _renderIlluminance(
-                context),
+            _renderTemperature(context),
+            _renderIlluminance(context),
             _renderUsageMeterBtn(context),
-            _renderUsageMeter(
-                context),
-            _renderHumidity(
-                context),
+            _renderUsageMeter(context),
+            _renderHumidity(context),
             _renderWeather(context)
           ],
         ));
   }
 
   Widget _renderTemperature(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: constants.normalBlue,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Center(
-                child: Text('30',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: constants.semiBold,
-                      color: constants.normalWhite,
-                      fontFamily: GoogleFonts.poppins().fontFamily,
-                    )),
+    return Provider(
+        create: (_) => feedPresenter,
+        builder: (context, child) {
+          return Consumer<FeedPresenter>(builder: (context, value, child) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: constants.normalBlue,
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 7.0),
-            child: Text(
-              'Temperature',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: constants.normal,
-                color: constants.normalWhite,
-                fontFamily: GoogleFonts.poppins().fontFamily,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Center(
+                        child: Text('${value.temperature?.value ?? 0}',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: constants.semiBold,
+                              color: constants.normalWhite,
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                            )),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 7.0),
+                    child: Text(
+                      'Temperature',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: constants.normal,
+                        color: constants.normalWhite,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            );
+          });
+        });
   }
 
   Widget _renderIlluminance(BuildContext context) {
@@ -163,7 +177,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top:12),
+              padding: const EdgeInsets.only(top: 12),
               child: Center(
                 child: Text('25',
                     style: TextStyle(
@@ -199,8 +213,7 @@ class _HomePageState extends State<HomePage> {
       onPressed: () {
         showModalBottomSheet(
             context: context,
-            builder:  (BuildContext context)=> const UsageMeterPage()
-        );
+            builder: (BuildContext context) => const UsageMeterPage());
       },
     );
   }
@@ -216,10 +229,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top:12.0),
-              child: Center(
-                child:Image.asset(constants.usageMeterImage)
-              ),
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Center(child: Image.asset(constants.usageMeterImage)),
             ),
           ),
           Padding(
@@ -250,7 +261,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top:12.0),
+              padding: const EdgeInsets.only(top: 12.0),
               child: Center(
                 child: Text('68%',
                     style: TextStyle(
@@ -285,8 +296,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _renderDevicesBtn(
-      BuildContext context) {
+  Widget _renderDevicesBtn(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -294,7 +304,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pushNamed(context, constants.runningDevices);
               },
               child: Text(
@@ -309,7 +319,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pushNamed(context, constants.runningDevices);
             },
             child: Text(
@@ -327,8 +337,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _renderDevices(
-      BuildContext context) {
+  Widget _renderDevices(BuildContext context) {
     List<Map<String, String>> listDevices = [
       {
         'devices': 'Light',
@@ -383,7 +392,8 @@ class _HomePageState extends State<HomePage> {
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height*0.18),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * 0.18),
           child: GestureDetector(
               onTap: () =>
                   {Navigator.pushNamed(context, listDevices[index]['to']!)},
@@ -393,7 +403,8 @@ class _HomePageState extends State<HomePage> {
                   color: constants.darkBlack,
                 ),
                 margin: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 14.0),
-                padding: const EdgeInsets.only(top: 12.0, left: 12.0,right: 12.0),
+                padding:
+                    const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -411,9 +422,11 @@ class _HomePageState extends State<HomePage> {
                           color: const Color.fromARGB(255, 183, 182, 182),
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         )),
-                    Expanded(child: Center(child: Image.asset(listDevices[index]['image']!))),
+                    Expanded(
+                        child: Center(
+                            child: Image.asset(listDevices[index]['image']!))),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:12.0),
+                      padding: const EdgeInsets.only(bottom: 12.0),
                       child: Text(listDevices[index]['room']!,
                           style: TextStyle(
                             fontSize: 10,
