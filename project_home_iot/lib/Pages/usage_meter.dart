@@ -77,7 +77,7 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.18,top: MediaQuery.of(context).size.height*0.015,bottom: MediaQuery.of(context).size.height*0.015),
+                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1,top: MediaQuery.of(context).size.height*0.015,bottom: MediaQuery.of(context).size.height*0.015,right:2),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: constants.normalWhite,

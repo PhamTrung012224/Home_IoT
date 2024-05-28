@@ -28,13 +28,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.lightBlack,
+      statusBarColor: constants.normalBlack,
     ));
     return const Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image(image: AssetImage(constants.onBoard)),
+          Center(child: Image(image: AssetImage(constants.onBoardingImage))),
         ],
       ),
     );
