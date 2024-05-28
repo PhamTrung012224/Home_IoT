@@ -138,7 +138,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top:12.0,left: 12.0,bottom: 12.0),
-                child: Text('Colours',
+                child: Text('Colour Picker',
                 style: TextStyle(
                   fontSize: 18,
                   color: constants.normalWhite,
