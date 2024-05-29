@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
 import 'package:project_home_iot/presenter/feed_presenter.dart';
+import 'package:project_home_iot/presenter/weather_presenter.dart';
 import 'package:project_home_iot/shared/constants.dart' as constants;
 import 'package:provider/provider.dart';
 
@@ -15,13 +16,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final feedPresenter = FeedPresenter();
+  FeedPresenter feedPresenter = FeedPresenter();
+  WeatherPresenter weatherPresenter = WeatherPresenter();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       feedPresenter.getLatestTemperature();
+      feedPresenter.getLatestIlluminance();
+      feedPresenter.getLatestHumidity();
+      weatherPresenter.getLatestWeather();
     });
   }
 
@@ -34,17 +39,27 @@ class _HomePageState extends State<HomePage> {
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
     var screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: constants.lightBlack,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _renderWelcome(context, screenHeight, screenWidth),
-            _renderDashboard(context, screenHeight, screenWidth),
-            _renderDevicesBtn(context),
-            Expanded(child: _renderDevices(context))
-          ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FeedPresenter>(
+          create: (_) => feedPresenter,
+        ),
+        ChangeNotifierProvider<WeatherPresenter>(
+          create: (_) => weatherPresenter,
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: constants.lightBlack,
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _renderWelcome(context, screenHeight, screenWidth),
+              _renderDashboard(context, screenHeight, screenWidth),
+              _renderDevicesBtn(context),
+              Expanded(child: _renderDevices(context))
+            ],
+          ),
         ),
       ),
     );
@@ -121,89 +136,87 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _renderTemperature(BuildContext context) {
-    return Provider(
-        create: (_) => feedPresenter,
-        builder: (context, child) {
-          return Consumer<FeedPresenter>(builder: (context, value, child) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: constants.normalBlue,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Center(
-                        child: Text('${value.temperature?.value ?? 0}',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: constants.semiBold,
-                              color: constants.normalWhite,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
-                            )),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 7.0),
-                    child: Text(
-                      'Temperature',
+    return Consumer<FeedPresenter>(builder: (context, value, child) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: constants.normalBlue,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Center(
+                  child: Text('${value.temperature?.value ?? 0}',
                       style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: constants.normal,
+                        fontSize: 24,
+                        fontWeight: constants.semiBold,
                         color: constants.normalWhite,
                         fontFamily: GoogleFonts.poppins().fontFamily,
-                      ),
-                    ),
-                  ),
-                ],
+                      )),
+                ),
               ),
-            );
-          });
-        });
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7.0),
+              child: Text(
+                'Temperature',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: constants.normal,
+                  color: constants.normalWhite,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _renderIlluminance(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: constants.normalBlue,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Center(
-                child: Text('25',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: constants.semiBold,
-                      color: constants.normalWhite,
-                      fontFamily: GoogleFonts.poppins().fontFamily,
-                    )),
+    return Consumer<FeedPresenter>(builder: (context, value, child) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: constants.normalBlue,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Center(
+                  child: Text('${value.illuminance?.value ?? 0}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: constants.semiBold,
+                        color: constants.normalWhite,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                      )),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 7.0),
-            child: Text(
-              'Illuminance',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: constants.normal,
-                color: constants.normalWhite,
-                fontFamily: GoogleFonts.poppins().fontFamily,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7.0),
+              child: Text(
+                'Illuminance',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: constants.normal,
+                  color: constants.normalWhite,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _renderUsageMeterBtn(BuildContext context) {
@@ -251,49 +264,111 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _renderHumidity(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: constants.normalBlue,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: Center(
-                child: Text('68%',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: constants.semiBold,
-                      color: constants.normalWhite,
-                      fontFamily: GoogleFonts.poppins().fontFamily,
-                    )),
+    return Consumer<FeedPresenter>(builder: (context, value, child) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: constants.normalBlue,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Center(
+                  child: Text('${value.humidity?.value ?? 0}%',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: constants.semiBold,
+                        color: constants.normalWhite,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                      )),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 7.0),
-            child: Text(
-              'Humidity',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: constants.normal,
-                color: constants.normalWhite,
-                fontFamily: GoogleFonts.poppins().fontFamily,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7.0),
+              child: Text(
+                'Humidity',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: constants.normal,
+                  color: constants.normalWhite,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _renderWeather(BuildContext context) {
-    return const Image(
-      image: AssetImage(constants.weather),
-    );
+    return Consumer<WeatherPresenter>(builder: (context,value,child){
+      return Container(
+        decoration: BoxDecoration(
+          color: constants.normalWhite,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                color: constants.normalYellow,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(3.0,5.0,3.0,5.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        value.currentWeather?.name??'No Information',
+                        style: TextStyle(
+                          color: constants.darkBlack,
+                          fontWeight: constants.bold,
+                          fontSize: 12,
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      child: Text(
+                        value.currentWeather?.weather.first.description??'No Information',
+                        style: TextStyle(
+                          color: constants.darkBlack,
+                          fontWeight: constants.medium,
+                          fontSize: 10,
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  "${((value.currentWeather?.main.temp ?? 273.15) - 273.15).toStringAsPrecision(3)}°C",
+                  style: TextStyle(
+                    color: constants.darkBlack,
+                    fontWeight: constants.bold,
+                    fontSize: 22,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+
   }
 
   Widget _renderDevicesBtn(BuildContext context) {

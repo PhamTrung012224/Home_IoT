@@ -12,6 +12,7 @@ const Color normalBlack = Color(0xFF151515);
 const Color darkBlack = Color(0xFF070707);
 const Color lightBlack = Color(0xFF222224);
 const Color normalBlue = Color(0xFF0A84FF);
+const Color normalYellow = Color(0xFFF3E51A);
 const Color normalGray = Color(0xFF84868B);
 const Color darkGray = Color(0xFF707070);
 const Color lightGray = Color(0xA8C2C2CB);

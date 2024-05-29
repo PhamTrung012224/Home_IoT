@@ -1,14 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:project_home_iot/model/constants/http_constants.dart';
 
-final class HttpProvider {
-  static final _dio =
-      Dio(BaseOptions(baseUrl: 'http://io.adafruit.com/api/v2',
-      headers: {
-        'X-AIO-Key': HttpConstants.xAioKey
-      }));
+class HttpProvider {
+  final String baseUrl;
+  final Map<String, dynamic>? header;
+  final Map<String, dynamic>? queryParameters;
+  late final Dio _dio;
 
-  static Future<Map<String, dynamic>> get(String path) async {
+  HttpProvider({required this.baseUrl, this.header,this.queryParameters}) {
+    _dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      headers: header,
+      queryParameters: queryParameters,
+    ));
+  }
+
+  Future<Map<String, dynamic>> get(String path) async {
     try {
       final res = await _dio.get<Map<String, dynamic>>(path);
       if (res.statusCode != null &&
