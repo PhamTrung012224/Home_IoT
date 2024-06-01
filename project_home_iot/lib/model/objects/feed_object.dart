@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'feed_object.g.dart';
 @JsonSerializable()
 class FeedObject {
   String id;
@@ -23,11 +24,6 @@ class FeedObject {
       required this.updated_at,
       required this.expiration});
 
-  factory FeedObject.fromJson(Map<String, dynamic> json) => FeedObject(
-      id: json['id'],
-      feed_id: json['feed_id'],
-      value: json['value'],
-      created_at: json['created_at'],
-      updated_at: json['updated_at'],
-      expiration: json['expiration']);
+  factory FeedObject.fromJson(Map<String, dynamic> json) => _$FeedObjectFromJson(json);
+  Map<String,dynamic> toJson()=>_$FeedObjectToJson(this);
 }

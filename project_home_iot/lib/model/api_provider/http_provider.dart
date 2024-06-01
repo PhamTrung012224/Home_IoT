@@ -26,4 +26,18 @@ class HttpProvider {
       rethrow;
     }
   }
+
+   Future<bool> post(String path, Map<String, dynamic> data) async {
+    try {
+        final res = await _dio.post<Map<String, dynamic>>(path,data: data );
+      if (res.statusCode != null &&
+          (res.statusCode! >= 200 || res.statusCode! <= 299)) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

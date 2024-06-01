@@ -2,7 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:project_home_iot/presenter/feed_presenter.dart';
+import 'package:project_home_iot/presenter/group_properties_presenter.dart';
+import 'package:project_home_iot/shared/color_constants.dart';
+import 'package:project_home_iot/shared/images_constants.dart';
+import 'package:provider/provider.dart';
+
+import '../model/objects/device_object.dart';
+import '../shared/fontweight_constants.dart';
+import '../shared/pages_constants.dart';
 
 class RunningDevicesPage extends StatefulWidget {
   const RunningDevicesPage({super.key});
@@ -12,21 +20,21 @@ class RunningDevicesPage extends StatefulWidget {
 }
 
 class _RunningDevicesPageState extends State<RunningDevicesPage> {
-    List<bool> ?switch1;
+  final FeedPresenter _feedPresenter = FeedPresenter();
 
-    @override
-    void initState() {
-      super.initState();
-      switch1 = [true, true, true, true, true, true];
-    }
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.normalBlack,
+      statusBarColor: ColorConstants.normalBlack,
     ));
 
     return Scaffold(
-        backgroundColor: constants.normalBlack,
+        backgroundColor: ColorConstants.normalBlack,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,149 +49,148 @@ class _RunningDevicesPageState extends State<RunningDevicesPage> {
 
   Widget _renderBackBtn(BuildContext context) {
     return IconButton(
-      icon: Image.asset(constants.returnButton),
-      onPressed: () => {Navigator.pushNamed(context, constants.home)},
+      icon: Image.asset(ImageConstants.returnButton),
+      onPressed: () => {
+        if (Navigator.canPop(context)) {Navigator.pop(context)}
+      },
     );
   }
 
   Widget _renderTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left:12),
+      padding: const EdgeInsets.only(left: 12),
       child: Text(
         'Running Devices',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: constants.bold,
-          color: constants.normalWhite,
+          fontWeight: FontWeightConstants.bold,
+          color: ColorConstants.normalWhite,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
     );
   }
 
-  Widget _renderDevices(BuildContext context,
-      State<RunningDevicesPage> state) {
+  Widget _renderDevices(BuildContext context, State<RunningDevicesPage> state) {
     List<Map<String, String>> listDevices = [
       {
-        "deviceImg": constants.lightBulb,
-        "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.lightAdjustments
+        "to": PagesConstants.lightAdjustments
       },
       {
-        "deviceImg": constants.airConditioner,
-        "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.lightAdjustments
+        "to": PagesConstants.lightAdjustments
       },
       {
-        "deviceImg": constants.fan,
-        "room": "Living Room",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.fanAdjustments
+        "to": PagesConstants.fanAdjustments
       },
       {
-        "deviceImg": constants.airConditioner,
-        "room": "Bedroom",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.lightAdjustments
+        "to": PagesConstants.lightAdjustments
       },
       {
-        "deviceImg": constants.lightBulb,
-        "room": "Balcony",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.lightAdjustments
+        "to": PagesConstants.lightAdjustments
       },
       {
-        "deviceImg": constants.lightBulb,
-        "room": "Kitchen",
         "time": "Running from 1 hr",
         "access": "4 Members has access",
-        "to": constants.lightAdjustments
+        "to": PagesConstants.lightAdjustments
       },
     ];
-
-    return GridView.builder(
-      itemCount: listDevices.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 1),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: constants.lightBlack,
-            ),
-            margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-            padding: const EdgeInsets.only(left: 6.0, top: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: Image.asset(listDevices[index]["deviceImg"]!)),
-                Container(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: Colors.blueAccent,
-                        width: 2.0,
+    return Consumer<GroupPropertiesPresenter>(
+        builder: (context, properties, child) {
+      return GridView.builder(
+        itemCount: properties.deviceObject.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 1),
+        itemBuilder: (context, index) {
+          DeviceObject deviceObject = DeviceObject(
+              name: properties.deviceObject[index].name,
+              status: properties.deviceObject[index].status,
+              room: properties.deviceObject[index].room,
+              image: properties.deviceObject[index].image,
+              value: properties.deviceObject[index].value);
+          return GestureDetector(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: ColorConstants.lightBlack,
+              ),
+              margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+              padding: const EdgeInsets.only(left: 6.0, top: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: Image.asset(deviceObject.image.last)),
+                  Container(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 2.0,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        listDevices[index]["room"]!,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: constants.semiBold,
-                          color: constants.normalWhite,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          deviceObject.room.last,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeightConstants.semiBold,
+                            color: ColorConstants.normalWhite,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                          ),
                         ),
-                      ),
-                      Text(
-                        listDevices[index]["time"]!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: constants.medium,
-                          color: constants.normalWhite,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        Text(
+                          listDevices[index]["time"]!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeightConstants.medium,
+                            color: ColorConstants.normalWhite,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                          ),
                         ),
-                      ),
-                      Text(
-                        listDevices[index]["access"]!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: constants.medium,
-                          color: constants.lightGray,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
+                        Text(
+                          listDevices[index]["access"]!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeightConstants.medium,
+                            color: ColorConstants.lightGray,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Transform.scale(
-                  scale: 0.7,
-                  child: Switch(
-                    value: switch1![index],
-                    onChanged: (value) {
-                      state.setState(() {
-                        switch1![index] = value;
-                      });
-                    },
-                  ),
-                )
-              ],
+                  Transform.scale(
+                    scale: 0.7,
+                    child: Switch(
+                      value: bool.parse(deviceObject.status.last),
+                      onChanged: (value) {
+                        state.setState(() {
+                          deviceObject.status.last = value.toString();
+                          _feedPresenter.sendLatestData(
+                              deviceObject.status.first, value.toString());
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    });
   }
 }

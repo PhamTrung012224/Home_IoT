@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:project_home_iot/model/objects/openweather_object.dart';
-import 'package:project_home_iot/model/repositories/weather_respository.dart';
+import 'package:project_home_iot/model/repositories/weather_repository.dart';
 import 'package:project_home_iot/presenter/constants/weather_constants.dart';
 
 final class WeatherPresenter extends ChangeNotifier{

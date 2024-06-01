@@ -2,11 +2,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_home_iot/Pages/light_adjustments.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
+import 'package:project_home_iot/model/objects/device_object.dart';
 import 'package:project_home_iot/presenter/feed_presenter.dart';
+import 'package:project_home_iot/presenter/group_properties_presenter.dart';
 import 'package:project_home_iot/presenter/weather_presenter.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:project_home_iot/shared/color_constants.dart';
+import 'package:project_home_iot/shared/fontweight_constants.dart';
 import 'package:provider/provider.dart';
+
+import '../shared/images_constants.dart';
+import '../shared/pages_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,24 +23,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FeedPresenter feedPresenter = FeedPresenter();
-  WeatherPresenter weatherPresenter = WeatherPresenter();
+  final FeedPresenter _feedPresenter = FeedPresenter();
+  final WeatherPresenter _weatherPresenter = WeatherPresenter();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      feedPresenter.getLatestTemperature();
-      feedPresenter.getLatestIlluminance();
-      feedPresenter.getLatestHumidity();
-      weatherPresenter.getLatestWeather();
+      _feedPresenter.init();
+      _weatherPresenter.getLatestWeather();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.lightBlack,
+      statusBarColor: ColorConstants.lightBlack,
     ));
     var screenHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
@@ -42,14 +47,14 @@ class _HomePageState extends State<HomePage> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<FeedPresenter>(
-          create: (_) => feedPresenter,
+          create: (_) => _feedPresenter,
         ),
         ChangeNotifierProvider<WeatherPresenter>(
-          create: (_) => weatherPresenter,
+          create: (_) => _weatherPresenter,
         ),
       ],
       child: Scaffold(
-        backgroundColor: constants.lightBlack,
+        backgroundColor: ColorConstants.lightBlack,
         body: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: constants.normalBlack,
+        color: ColorConstants.normalBlack,
       ),
       constraints: BoxConstraints(
         maxHeight: screenHeight * 0.1,
@@ -86,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                 maxHeight: childrenHeight, maxWidth: screenWidth * 0.15),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: constants.normalBlue,
+              color: ColorConstants.normalBlue,
             ),
             margin: const EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 12.0),
           ),
@@ -96,8 +101,8 @@ class _HomePageState extends State<HomePage> {
               'Welcome',
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: constants.medium,
-                color: constants.normalWhite,
+                fontWeight: FontWeightConstants.medium,
+                color: ColorConstants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -112,7 +117,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: constants.normalBlack,
+          color: ColorConstants.normalBlack,
         ),
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.32,
@@ -140,7 +145,7 @@ class _HomePageState extends State<HomePage> {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
-          color: constants.normalBlue,
+          color: ColorConstants.normalBlue,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -152,8 +157,8 @@ class _HomePageState extends State<HomePage> {
                   child: Text('${value.temperature?.value ?? 0}',
                       style: TextStyle(
                         fontSize: 24,
-                        fontWeight: constants.semiBold,
-                        color: constants.normalWhite,
+                        fontWeight: FontWeightConstants.semiBold,
+                        color: ColorConstants.normalWhite,
                         fontFamily: GoogleFonts.poppins().fontFamily,
                       )),
                 ),
@@ -165,8 +170,8 @@ class _HomePageState extends State<HomePage> {
                 'Temperature',
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: constants.normal,
-                  color: constants.normalWhite,
+                  fontWeight: FontWeightConstants.normal,
+                  color: ColorConstants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
@@ -182,7 +187,7 @@ class _HomePageState extends State<HomePage> {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
-          color: constants.normalBlue,
+          color: ColorConstants.normalBlue,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -194,8 +199,8 @@ class _HomePageState extends State<HomePage> {
                   child: Text('${value.illuminance?.value ?? 0}',
                       style: TextStyle(
                         fontSize: 24,
-                        fontWeight: constants.semiBold,
-                        color: constants.normalWhite,
+                        fontWeight: FontWeightConstants.semiBold,
+                        color: ColorConstants.normalWhite,
                         fontFamily: GoogleFonts.poppins().fontFamily,
                       )),
                 ),
@@ -207,8 +212,8 @@ class _HomePageState extends State<HomePage> {
                 'Illuminance',
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: constants.normal,
-                  color: constants.normalWhite,
+                  fontWeight: FontWeightConstants.normal,
+                  color: ColorConstants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
@@ -222,7 +227,7 @@ class _HomePageState extends State<HomePage> {
   Widget _renderUsageMeterBtn(BuildContext context) {
     return IconButton(
       alignment: Alignment.topRight,
-      icon: Image.asset(constants.menuButton),
+      icon: Image.asset(ImageConstants.menuButton),
       onPressed: () {
         showModalBottomSheet(
             context: context,
@@ -235,7 +240,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: constants.normalBlue,
+        color: ColorConstants.normalBlue,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -243,7 +248,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 12.0),
-              child: Center(child: Image.asset(constants.usageMeterImage)),
+              child: Center(child: Image.asset(ImageConstants.usageMeterImage)),
             ),
           ),
           Padding(
@@ -252,8 +257,8 @@ class _HomePageState extends State<HomePage> {
               'Usage Meter',
               style: TextStyle(
                 fontSize: 13,
-                fontWeight: constants.normal,
-                color: constants.normalWhite,
+                fontWeight: FontWeightConstants.normal,
+                color: ColorConstants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
@@ -268,7 +273,7 @@ class _HomePageState extends State<HomePage> {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
-          color: constants.normalBlue,
+          color: ColorConstants.normalBlue,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -280,8 +285,8 @@ class _HomePageState extends State<HomePage> {
                   child: Text('${value.humidity?.value ?? 0}%',
                       style: TextStyle(
                         fontSize: 24,
-                        fontWeight: constants.semiBold,
-                        color: constants.normalWhite,
+                        fontWeight: FontWeightConstants.semiBold,
+                        color: ColorConstants.normalWhite,
                         fontFamily: GoogleFonts.poppins().fontFamily,
                       )),
                 ),
@@ -293,8 +298,8 @@ class _HomePageState extends State<HomePage> {
                 'Humidity',
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: constants.normal,
-                  color: constants.normalWhite,
+                  fontWeight: FontWeightConstants.normal,
+                  color: ColorConstants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
@@ -306,10 +311,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _renderWeather(BuildContext context) {
-    return Consumer<WeatherPresenter>(builder: (context,value,child){
+    return Consumer<WeatherPresenter>(builder: (context, value, child) {
       return Container(
         decoration: BoxDecoration(
-          color: constants.normalWhite,
+          color: ColorConstants.normalWhite,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -317,20 +322,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                color: constants.normalYellow,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                color: ColorConstants.normalYellow,
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(3.0,5.0,3.0,5.0),
+                padding: const EdgeInsets.fromLTRB(3.0, 5.0, 3.0, 5.0),
                 child: Column(
                   children: [
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        value.currentWeather?.name??'No Information',
+                        value.currentWeather?.name ?? 'No Information',
                         style: TextStyle(
-                          color: constants.darkBlack,
-                          fontWeight: constants.bold,
+                          color: ColorConstants.darkBlack,
+                          fontWeight: FontWeightConstants.bold,
                           fontSize: 12,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
@@ -338,10 +345,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Align(
                       child: Text(
-                        value.currentWeather?.weather.first.description??'No Information',
+                        value.currentWeather?.weather.first.description ??
+                            'No Information',
                         style: TextStyle(
-                          color: constants.darkBlack,
-                          fontWeight: constants.medium,
+                          color: ColorConstants.darkBlack,
+                          fontWeight: FontWeightConstants.medium,
                           fontSize: 10,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
@@ -356,8 +364,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "${((value.currentWeather?.main.temp ?? 273.15) - 273.15).toStringAsPrecision(3)}°C",
                   style: TextStyle(
-                    color: constants.darkBlack,
-                    fontWeight: constants.bold,
+                    color: ColorConstants.darkBlack,
+                    fontWeight: FontWeightConstants.bold,
                     fontSize: 22,
                     fontFamily: GoogleFonts.poppins().fontFamily,
                   ),
@@ -368,153 +376,150 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     });
-
   }
 
   Widget _renderDevicesBtn(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, constants.runningDevices);
-              },
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, PagesConstants.runningDevices)
+            .then((value) {
+          Provider.of<GroupPropertiesPresenter>(context, listen: false)
+              .getDeviceObject();
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
               child: Text(
                 'Running Devices',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: constants.medium,
-                  color: constants.normalWhite,
+                  fontWeight: FontWeightConstants.medium,
+                  color: ColorConstants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, constants.runningDevices);
-            },
-            child: Text(
+            Text(
               'View All',
               style: TextStyle(
                 fontSize: 14,
-                fontWeight: constants.normal,
-                color: constants.normalWhite,
+                fontWeight: FontWeightConstants.normal,
+                color: ColorConstants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _renderDevices(BuildContext context) {
-    List<Map<String, String>> listDevices = [
-      {
-        'devices': 'Light',
-        'time': 'on for last 4 hours',
-        'image': constants.lightBulb,
-        'room': 'Living Room',
-        'to': constants.lightAdjustments
-      },
-      {
-        'devices': 'AC',
-        'time': 'on for last 4 hours',
-        'image': constants.airConditioner,
-        'room': 'Living Room',
-        'to': constants.lightAdjustments
-      },
-      {
-        'devices': 'Fan',
-        'time': 'on for last 4 hours',
-        'image': constants.fan,
-        'room': 'Living Room',
-        'to': constants.fanAdjustments
-      },
-      {
-        'devices': 'AC',
-        'time': 'on for last 4 hours',
-        'image': constants.airConditioner,
-        'room': 'Living Room',
-        'to': constants.lightAdjustments
-      },
-      {
-        'devices': 'Light',
-        'time': 'on for last 4 hours',
-        'image': constants.lightBulb,
-        'room': 'Balcony',
-        'to': constants.lightAdjustments
-      },
-      {
-        'devices': 'Light',
-        'time': 'on for last 4 hours',
-        'image': constants.lightBulb,
-        'room': 'Kitchen',
-        'to': constants.lightAdjustments
-      },
-    ];
-    return GridView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: listDevices.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        mainAxisSpacing: 3.0,
-        childAspectRatio: 2.1,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height * 0.18),
-          child: GestureDetector(
-              onTap: () =>
-                  {Navigator.pushNamed(context, listDevices[index]['to']!)},
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: constants.darkBlack,
-                ),
-                margin: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 14.0),
-                padding:
-                    const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(listDevices[index]['devices']!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: constants.medium,
-                          color: constants.normalWhite,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                        )),
-                    Text(listDevices[index]['time']!,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: constants.normal,
-                          color: const Color.fromARGB(255, 183, 182, 182),
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                        )),
-                    Expanded(
-                        child: Center(
-                            child: Image.asset(listDevices[index]['image']!))),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Text(listDevices[index]['room']!,
+    return Consumer<GroupPropertiesPresenter>(
+        builder: (context, properties, child) {
+      return GridView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: properties.deviceObject.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          mainAxisSpacing: 3.0,
+          childAspectRatio: 2.1,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          DeviceObject deviceObject = DeviceObject(
+              name: properties.deviceObject[index].name,
+              status: properties.deviceObject[index].status,
+              room: properties.deviceObject[index].room,
+              image: properties.deviceObject[index].image,
+              value: properties.deviceObject[index].value);
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.18),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                    builder: (context) => LightAdjustmentsPage(
+                      deviceObject: deviceObject,
+                    ),
+                  ))
+                      .then((_) {
+                    Provider.of<GroupPropertiesPresenter>(context,
+                            listen: false)
+                        .getDeviceObject();
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: ColorConstants.darkBlack,
+                  ),
+                  margin: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 14.0),
+                  padding:
+                      const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(deviceObject.name.last,
                           style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: constants.normal,
-                            color: constants.normalWhite,
+                            fontSize: 12,
+                            fontWeight: FontWeightConstants.medium,
+                            color: ColorConstants.normalWhite,
                             fontFamily: GoogleFonts.poppins().fontFamily,
                           )),
-                    ),
-                  ],
-                ),
-              )),
-        );
-      },
-    );
+                      Text('on for last 4 hours',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeightConstants.normal,
+                            color: const Color.fromARGB(255, 183, 182, 182),
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                          )),
+                      Expanded(
+                          child: Center(
+                              child: Image.asset(deviceObject.image.last))),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2.0),
+                            child: Text(deviceObject.room.last,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeightConstants.normal,
+                                  color: ColorConstants.normalWhite,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                )),
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Transform.scale(
+                                scale: 0.7,
+                                child: Switch(
+                                    value: bool.parse(deviceObject.status.last),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        deviceObject.status.last =
+                                            value.toString();
+                                        _feedPresenter.sendLatestData(
+                                            deviceObject.status.first,
+                                            value.toString());
+                                      });
+                                    }),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          );
+        },
+      );
+    });
   }
 }

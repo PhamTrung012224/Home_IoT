@@ -2,7 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:project_home_iot/presenter/group_properties_presenter.dart';
+import 'package:provider/provider.dart';
+
+import '../model/objects/device_object.dart';
+import '../shared/color_constants.dart';
+import '../shared/fontweight_constants.dart';
+import '../shared/images_constants.dart';
 
 class UsageMeterPage extends StatefulWidget {
   const UsageMeterPage({super.key});
@@ -21,7 +27,6 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
   void initState() {
     super.initState();
     val = date.first;
-    progressVal = [16, 26, 24, 30, 12, 5, 28, 32];
   }
 
   @override
@@ -36,8 +41,7 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
           width: double.infinity,
           child: Column(
             children: [
-              _renderTitleBar(
-                  context,this),
+              _renderTitleBar(context, this),
               Expanded(child: _renderDevices(context)),
               _renderQuotes(context)
             ],
@@ -47,20 +51,18 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
     );
   }
 
-  _renderTitleBar(BuildContext context,
-      State<UsageMeterPage> stateU1) {
+  _renderTitleBar(BuildContext context, State<UsageMeterPage> stateU1) {
     return Container(
-        height: MediaQuery.of(context).size.height*0.07,
+        height: MediaQuery.of(context).size.height * 0.07,
         decoration: const BoxDecoration(
             border: Border(
-                bottom: BorderSide(
-                    width: 0.6, color: constants.lightGray))),
+                bottom: BorderSide(width: 0.6, color: ColorConstants.lightGray))),
         child: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left:12.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0),
               child: Image(
-                image: AssetImage(constants.usageMeterImage),
+                image: AssetImage(ImageConstants.usageMeterImage),
               ),
             ),
             Padding(
@@ -69,36 +71,39 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
                 'Usage meter',
                 style: TextStyle(
                   fontSize: 17,
-                  fontWeight: constants.medium,
-                  color: constants.normalWhite,
+                  fontWeight: FontWeightConstants.medium,
+                  color: ColorConstants.normalWhite,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1,top: MediaQuery.of(context).size.height*0.015,bottom: MediaQuery.of(context).size.height*0.015,right:2),
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.18,
+                    top: MediaQuery.of(context).size.height * 0.015,
+                    bottom: MediaQuery.of(context).size.height * 0.015,
+                    right: 2),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: constants.normalWhite,
-                    borderRadius: BorderRadius.circular(20)
-                  ),
+                      color: ColorConstants.normalWhite,
+                      borderRadius: BorderRadius.circular(20)),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         borderRadius: BorderRadius.circular(20),
                         value: val,
-                        iconEnabledColor: constants.darkBlack,
-                        dropdownColor: constants.normalWhite,
+                        iconEnabledColor: ColorConstants.darkBlack,
+                        dropdownColor: ColorConstants.normalWhite,
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: constants.normal,
+                          fontWeight: FontWeightConstants.normal,
                           color: Colors.black,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
                         iconSize: 24,
-                        icon: Image.asset(constants.downArrow),
+                        icon: Image.asset(ImageConstants.downArrow),
                         items: date.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -117,9 +122,9 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
               ),
             ),
             IconButton(
-              icon: Image.asset(constants.closeButton),
+              icon: Image.asset(ImageConstants.closeButton),
               onPressed: () {
-                if(Navigator.canPop(context)){
+                if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
               },
@@ -129,60 +134,57 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
   }
 
   _renderDevices(BuildContext context) {
-    List<Map<String, String>> devicesList = [
-      {'deviceImg': constants.airConditioner, 'value': '16 Units'},
-      {'deviceImg': constants.lightBulb, 'value': '26 Units'},
-      {'deviceImg': constants.fan, 'value': '24 Units'},
-      {'deviceImg': constants.cleaner, 'value': '30 Units'},
-      {'deviceImg': constants.television, 'value': '12 Units'},
-      {'deviceImg': constants.fridge, 'value': '5 Units'},
-      {'deviceImg': constants.lightBulb, 'value': '28 Units'},
-      {'deviceImg': constants.airConditioner, 'value': '32 Units'},
-    ];
-    // progressVal = [16, 26, 24, 30, 12, 5, 28, 32];
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        childAspectRatio: 9.0,
-        mainAxisSpacing: 6.0,
-      ),
-      itemCount: 8,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              Image.asset(
-                devicesList[index]['deviceImg'].toString(),
-                height: 30,
-                width: 30,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left:8.0,right: 10.0),
-                  child: LinearProgressIndicator(
-                    borderRadius: BorderRadius.circular(10),
-                    value: progressVal![index] / 38.0,
-                    backgroundColor: constants.darkBlack,
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+    return Consumer<GroupPropertiesPresenter>(builder: (context, properties, child) {
+      return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 9.0,
+          mainAxisSpacing: 6.0,
+        ),
+        itemCount: properties.deviceObject.length,
+        itemBuilder: (context, index) {
+          DeviceObject deviceObject = DeviceObject(
+              name: properties.deviceObject[index].name,
+              status: properties.deviceObject[index].status,
+              room: properties.deviceObject[index].room,
+              image: properties.deviceObject[index].image,
+              value: properties.deviceObject[index].value);
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Image.asset(
+                  deviceObject.image.last,
+                  height: 30,
+                  width: 30,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 10.0),
+                    child: LinearProgressIndicator(
+                      borderRadius: BorderRadius.circular(10),
+                      value: int.parse(deviceObject.value.last) / 38.0,
+                      backgroundColor: ColorConstants.darkBlack,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.blueAccent),
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                devicesList[index]['value'].toString(),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: constants.medium,
-                  color: constants.normalWhite,
-                  fontFamily: GoogleFonts.poppins().fontFamily,
+                Text(
+                  '${deviceObject.value.last} Units',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeightConstants.medium,
+                    color: ColorConstants.normalWhite,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 
   _renderQuotes(BuildContext context) {
@@ -191,7 +193,7 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
           border: Border(
         top: BorderSide(
           width: 0.6,
-          color: constants.lightGray,
+          color: ColorConstants.lightGray,
         ),
       )),
       alignment: Alignment.center,
@@ -201,8 +203,8 @@ class _UsageMeterPageState extends State<UsageMeterPage> {
         'Spending more on air conditioner save more by switching ac to the room temperature at night time.',
         style: TextStyle(
           fontSize: 12,
-          fontWeight: constants.normal,
-          color: constants.lightGray,
+          fontWeight: FontWeightConstants.normal,
+          color: ColorConstants.lightGray,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),

@@ -2,7 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+
+import '../shared/color_constants.dart';
+import '../shared/fontweight_constants.dart';
+import '../shared/images_constants.dart';
 
 class FanAdjustmentsPage extends StatefulWidget {
   const FanAdjustmentsPage({super.key});
@@ -25,11 +28,11 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.normalBlack,
+      statusBarColor: ColorConstants.normalBlack,
     ));
 
     return Scaffold(
-        backgroundColor: constants.normalBlack,
+        backgroundColor: ColorConstants.normalBlack,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,8 +48,10 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
 
   Widget _renderBackBtn(BuildContext context) {
     return IconButton(
-      icon: Image.asset(constants.returnButton),
-      onPressed: () => {Navigator.pushNamed(context, constants.home)},
+      icon: Image.asset(ImageConstants.returnButton),
+      onPressed: () => {
+        if (Navigator.canPop(context)) {Navigator.pop(context)}
+      },
     );
   }
 
@@ -57,8 +62,8 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
         'Fan Adjustments',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: constants.bold,
-          color: constants.normalWhite,
+          fontWeight: FontWeightConstants.bold,
+          color: ColorConstants.normalWhite,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
@@ -79,22 +84,22 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
                 Text('Fan- Living Room',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: constants.bold,
-                      color: constants.normalWhite,
+                      fontWeight: FontWeightConstants.bold,
+                      color: ColorConstants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
                 Text('on for last three hours',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: constants.medium,
-                      color: constants.lightGray,
+                      fontWeight: FontWeightConstants.medium,
+                      color: ColorConstants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
                 Text('Consumed 8 units',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: constants.medium,
-                      color: constants.lightGray,
+                      fontWeight: FontWeightConstants.medium,
+                      color: ColorConstants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ],
@@ -110,7 +115,7 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
                 isOnSwitch = value;
               });
             },
-            activeColor: constants.green,
+            activeColor: ColorConstants.green,
           ),
         ),
       ],
@@ -124,7 +129,7 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
       margin: const EdgeInsets.only(left:12.0,right:12.0,top:24.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: constants.lightBlack,
+        color: ColorConstants.lightBlack,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,9 +140,9 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
               'Speed',
               style: TextStyle(
                 fontSize: 18,
-                color: constants.normalWhite,
+                color: ColorConstants.normalWhite,
                 fontFamily: GoogleFonts.poppins().fontFamily,
-                fontWeight: constants.semiBold,
+                fontWeight: FontWeightConstants.semiBold,
               ),
             ),
           ),
@@ -145,10 +150,10 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
             child: SliderTheme(
             data: const SliderThemeData(
               trackHeight: 30.0,
-              thumbColor: constants.lightGray,
+              thumbColor: ColorConstants.lightGray,
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
-              activeTrackColor: constants.lightGray,
-              inactiveTrackColor: constants.normalBlack,
+              activeTrackColor: ColorConstants.lightGray,
+              inactiveTrackColor: ColorConstants.normalBlack,
               rangeTrackShape: RoundedRectRangeSliderTrackShape(),
 
             ),

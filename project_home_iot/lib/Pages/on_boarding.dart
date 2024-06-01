@@ -2,7 +2,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:project_home_iot/shared/color_constants.dart';
+import 'package:project_home_iot/shared/pages_constants.dart';
+
+import '../shared/images_constants.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -14,7 +17,7 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   void _startTimer() {
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.pushReplacementNamed(context, constants.home);
+      Navigator.pushReplacementNamed(context, PagesConstants.home);
     });
   }
 
@@ -28,13 +31,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.normalBlack,
+      statusBarColor: ColorConstants.normalBlack,
     ));
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(child: Image(image: AssetImage(constants.onBoardingImage))),
+          Center(child: Image(image: AssetImage(ImageConstants.onBoardingImage))),
         ],
       ),
     );

@@ -3,34 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_home_iot/shared/constants.dart' as constants;
+import 'package:project_home_iot/model/objects/device_object.dart';
+
+import '../presenter/feed_presenter.dart';
+import '../shared/color_constants.dart';
+import '../shared/fontweight_constants.dart';
+import '../shared/images_constants.dart';
 
 class LightAdjustmentsPage extends StatefulWidget {
-  const LightAdjustmentsPage({super.key});
+  final DeviceObject? deviceObject;
+  const LightAdjustmentsPage({super.key, this.deviceObject});
 
   @override
   State<LightAdjustmentsPage> createState() => _LightAdjustmentsPageState();
 }
 
 class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
-  bool? isOnSwitch;
   Color? colorPicker;
+  final FeedPresenter _feedPresenter = FeedPresenter();
 
   @override
   void initState() {
     super.initState();
-    isOnSwitch = false;
-    colorPicker = constants.normalWhite;
+    colorPicker = ColorConstants.normalWhite;
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: constants.normalBlack,
+      statusBarColor: ColorConstants.normalBlack,
     ));
 
     return Scaffold(
-        backgroundColor: constants.normalBlack,
+        backgroundColor: ColorConstants.normalBlack,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,8 +54,10 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
 
   Widget _renderBtn(BuildContext context) {
     return IconButton(
-      icon: Image.asset(constants.returnButton),
-      onPressed: () => {Navigator.pushNamed(context, constants.home)},
+      icon: Image.asset(ImageConstants.returnButton),
+      onPressed: () => {
+        if (Navigator.canPop(context)) {Navigator.pop(context)}
+      },
     );
   }
 
@@ -58,11 +65,11 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
     return Padding(
       padding: const EdgeInsets.only(left:12.0,bottom: 14.0),
       child: Text(
-        'Light Adjustments',
+        '${widget.deviceObject!.name.last} Adjustments',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: constants.bold,
-          color: constants.normalWhite,
+          fontWeight: FontWeightConstants.bold,
+          color: ColorConstants.normalWhite,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
@@ -80,25 +87,25 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Light- Living Room',
+                Text('${widget.deviceObject!.name.last} - ${widget.deviceObject!.room.last}',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: constants.bold,
-                      color: constants.normalWhite,
+                      fontWeight: FontWeightConstants.bold,
+                      color: ColorConstants.normalWhite,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
                 Text('on for last three hours',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: constants.medium,
-                      color: constants.lightGray,
+                      fontWeight: FontWeightConstants.medium,
+                      color: ColorConstants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
-                Text('Consumed 8 units',
+                Text('Consumed ${widget.deviceObject!.value.last} Units',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: constants.medium,
-                      color: constants.lightGray,
+                      fontWeight: FontWeightConstants.medium,
+                      color: ColorConstants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
               ],
@@ -108,13 +115,14 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
         Padding(
           padding: const EdgeInsets.only(right:12.0),
           child: Switch(
-            value: isOnSwitch!,
+            value: bool.parse(widget.deviceObject!.status.last),
             onChanged: (value) {
               setState(() {
-                isOnSwitch = value;
+                widget.deviceObject!.status.last = value.toString();
+                _feedPresenter.sendLatestData(widget.deviceObject!.status.first, value.toString());
               });
             },
-            activeColor: constants.green,
+            activeColor: ColorConstants.green,
           ),
         ),
       ],
@@ -131,7 +139,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-             color: constants.lightBlack,
+             color: ColorConstants.lightBlack,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,17 +149,19 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                 child: Text('Colour Picker',
                 style: TextStyle(
                   fontSize: 18,
-                  color: constants.normalWhite,
-                  fontWeight: constants.semiBold,
+                  color: ColorConstants.normalWhite,
+                  fontWeight: FontWeightConstants.semiBold,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
                 ),
               ),
               ColorPicker(
+                hexInputBar: true,
+                enableAlpha: false,
                 // ignore: deprecated_member_use
                 labelTextStyle: TextStyle(
-                  color: constants.normalWhite,
-                  fontWeight: constants.semiBold,
+                  color: ColorConstants.normalWhite,
+                  fontWeight: FontWeightConstants.semiBold,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
                 pickerAreaBorderRadius: BorderRadius.circular(180),
