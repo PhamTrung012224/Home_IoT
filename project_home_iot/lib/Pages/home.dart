@@ -1,7 +1,9 @@
 //Home Page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_home_iot/Pages/fan_adjustments.dart';
 import 'package:project_home_iot/Pages/light_adjustments.dart';
 import 'package:project_home_iot/Pages/usage_meter.dart';
 import 'package:project_home_iot/model/objects/device_object.dart';
@@ -24,14 +26,42 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FeedPresenter _feedPresenter = FeedPresenter();
-  final WeatherPresenter _weatherPresenter = WeatherPresenter();
+  late double lat;
+  late double lon;
+  final WeatherPresenter _weatherPresenter =
+      WeatherPresenter(lat: '0', lon: '0');
+
+  Future<Position> getCurrentLocation() async {
+    bool serviceEnable = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnable) {
+      return Future.error('Weather services are disabled');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot use weather service');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
 
   @override
   void initState() {
     super.initState();
+
+    getCurrentLocation().then((value) {
+      lat = value.latitude;
+      lon = value.longitude;
+      _weatherPresenter.updateLocation(lat.toString(), lon.toString());
+    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _feedPresenter.init();
-      _weatherPresenter.getLatestWeather();
     });
   }
 
@@ -311,7 +341,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _renderWeather(BuildContext context) {
-    return Consumer<WeatherPresenter>(builder: (context, value, child) {
+    return Consumer<WeatherPresenter>(builder: (context, weather, child) {
       return Container(
         decoration: BoxDecoration(
           color: ColorConstants.normalWhite,
@@ -334,7 +364,7 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        value.currentWeather?.name ?? 'No Information',
+                        weather.currentWeather?.name ?? 'No Information',
                         style: TextStyle(
                           color: ColorConstants.darkBlack,
                           fontWeight: FontWeightConstants.bold,
@@ -345,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Align(
                       child: Text(
-                        value.currentWeather?.weather.first.description ??
+                        weather.currentWeather?.weather.first.description ??
                             'No Information',
                         style: TextStyle(
                           color: ColorConstants.darkBlack,
@@ -362,7 +392,7 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: Center(
                 child: Text(
-                  "${((value.currentWeather?.main.temp ?? 273.15) - 273.15).toStringAsPrecision(3)}°C",
+                  "${((weather.currentWeather?.main.temp ?? 273.15) - 273.15).toStringAsPrecision(3)}°C",
                   style: TextStyle(
                     color: ColorConstants.darkBlack,
                     fontWeight: FontWeightConstants.bold,
@@ -435,23 +465,39 @@ class _HomePageState extends State<HomePage> {
               status: properties.deviceObject[index].status,
               room: properties.deviceObject[index].room,
               image: properties.deviceObject[index].image,
-              value: properties.deviceObject[index].value);
+              value: properties.deviceObject[index].value,
+              color: properties.deviceObject[index].color,
+              speed: properties.deviceObject[index].speed);
           return Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).size.height * 0.18),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                    builder: (context) => LightAdjustmentsPage(
-                      deviceObject: deviceObject,
-                    ),
-                  ))
-                      .then((_) {
-                    Provider.of<GroupPropertiesPresenter>(context,
-                            listen: false)
-                        .getDeviceObject();
-                  });
+                  if (properties.getDeviceName(index).contains('fan')) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => FanAdjustmentsPage(
+                        deviceObject: deviceObject,
+                      ),
+                    ))
+                        .then((_) {
+                      Provider.of<GroupPropertiesPresenter>(context,
+                              listen: false)
+                          .getDeviceObject();
+                    });
+                  } else {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => LightAdjustmentsPage(
+                        deviceObject: deviceObject,
+                      ),
+                    ))
+                        .then((_) {
+                      Provider.of<GroupPropertiesPresenter>(context,
+                              listen: false)
+                          .getDeviceObject();
+                    });
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(

@@ -2,27 +2,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_home_iot/presenter/feed_presenter.dart';
 
+import '../model/objects/device_object.dart';
 import '../shared/color_constants.dart';
 import '../shared/fontweight_constants.dart';
 import '../shared/images_constants.dart';
 
 class FanAdjustmentsPage extends StatefulWidget {
-  const FanAdjustmentsPage({super.key});
+  final DeviceObject? deviceObject;
+  const FanAdjustmentsPage({super.key, this.deviceObject});
 
   @override
   State<FanAdjustmentsPage> createState() => _FanAdjustmentsPageState();
 }
 
 class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
-  bool ?isOnSwitch;
-  double ?fanSpeed;
+  final FeedPresenter _feedPresenter = FeedPresenter();
 
   @override
   void initState() {
     super.initState();
-    isOnSwitch=false;
-    fanSpeed=0.0;
   }
 
   @override
@@ -81,7 +81,7 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Fan- Living Room',
+                Text('${widget.deviceObject!.name.last} - ${widget.deviceObject!.room.last}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeightConstants.bold,
@@ -95,7 +95,7 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
                       color: ColorConstants.lightGray,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     )),
-                Text('Consumed 8 units',
+                Text('Consumed ${widget.deviceObject!.value.last} units',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeightConstants.medium,
@@ -109,10 +109,11 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
         Padding(
           padding: const EdgeInsets.only(right:12.0),
           child: Switch(
-            value: isOnSwitch!,
+            value: bool.parse(widget.deviceObject!.status.last),
             onChanged: (value) {
               setState(() {
-                isOnSwitch = value;
+                widget.deviceObject!.status.last = value.toString();
+                _feedPresenter.sendLatestData(widget.deviceObject!.status.first, value.toString());
               });
             },
             activeColor: ColorConstants.green,
@@ -158,10 +159,17 @@ class _FanAdjustmentsPageState extends State<FanAdjustmentsPage> {
 
             ),
             child: Slider(
-              value: fanSpeed!,
+              min:0.0,
+              max:100.0,
+              value: double.parse(widget.deviceObject!.speed!.last),
+              onChangeEnd: (value){
+                state.setState(() {
+                  _feedPresenter.sendLatestData(widget.deviceObject!.speed!.first, value.toString());
+                });
+              },
               onChanged: (value){
                 state.setState(() {
-                  fanSpeed=value;
+                  widget.deviceObject!.speed!.last=value.toString();
                 });
               },
             ),

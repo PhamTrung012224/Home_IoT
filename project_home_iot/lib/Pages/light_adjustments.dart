@@ -44,8 +44,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
               _renderTitle(context),
               _renderSubTitle(context, this),
               Expanded(
-                child: _renderColorPicker(
-                    context, this),
+                child: _renderColorPicker(context, this),
               )
             ],
           ),
@@ -63,7 +62,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
 
   Widget _renderTitle(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left:12.0,bottom: 14.0),
+      padding: const EdgeInsets.only(left: 12.0, bottom: 14.0),
       child: Text(
         '${widget.deviceObject!.name.last} Adjustments',
         style: TextStyle(
@@ -76,18 +75,19 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
     );
   }
 
-  Widget _renderSubTitle(BuildContext context,
-      State<LightAdjustmentsPage> state) {
+  Widget _renderSubTitle(
+      BuildContext context, State<LightAdjustmentsPage> state) {
     return Row(
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left:12.0),
+            padding: const EdgeInsets.only(left: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${widget.deviceObject!.name.last} - ${widget.deviceObject!.room.last}',
+                Text(
+                    '${widget.deviceObject!.name.last} - ${widget.deviceObject!.room.last}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeightConstants.bold,
@@ -113,13 +113,14 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right:12.0),
+          padding: const EdgeInsets.only(right: 12.0),
           child: Switch(
             value: bool.parse(widget.deviceObject!.status.last),
             onChanged: (value) {
               setState(() {
                 widget.deviceObject!.status.last = value.toString();
-                _feedPresenter.sendLatestData(widget.deviceObject!.status.first, value.toString());
+                _feedPresenter.sendLatestData(
+                    widget.deviceObject!.status.first, value.toString());
               });
             },
             activeColor: ColorConstants.green,
@@ -129,32 +130,55 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
     );
   }
 
-  Widget _renderColorPicker(BuildContext context,
-      State<LightAdjustmentsPage> state) {
+  Widget _renderColorPicker(
+      BuildContext context, State<LightAdjustmentsPage> state) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.1),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
         child: Container(
           margin: const EdgeInsets.all(12.0),
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-             color: ColorConstants.lightBlack,
+            color: ColorConstants.lightBlack,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top:12.0,left: 12.0,bottom: 12.0),
-                child: Text('Colour Picker',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: ColorConstants.normalWhite,
-                  fontWeight: FontWeightConstants.semiBold,
-                  fontFamily: GoogleFonts.poppins().fontFamily,
+              Row(children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 12.0, left: 12.0, bottom: 12.0),
+                    child: Text(
+                      'Colour Picker',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: ColorConstants.normalWhite,
+                        fontWeight: FontWeightConstants.semiBold,
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                      ),
+                    ),
+                  ),
                 ),
+                TextButton(
+                  onPressed: () {
+                    _feedPresenter.sendLatestData(
+                        widget.deviceObject!.color!.first,
+                        colorPicker.toString());
+                  },
+                  child: Text(
+                    'Send',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: ColorConstants.normalWhite,
+                      fontWeight: FontWeightConstants.semiBold,
+                      fontFamily: GoogleFonts.poppins().fontFamily,
+                    ),
+                  ),
                 ),
-              ),
+              ]),
               ColorPicker(
                 hexInputBar: true,
                 enableAlpha: false,

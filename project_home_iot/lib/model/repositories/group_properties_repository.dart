@@ -4,7 +4,6 @@ import 'package:project_home_iot/model/api_provider/http_provider.dart';
 import 'package:project_home_iot/model/constants/http_constants.dart';
 
 import '../objects/group_properties_object.dart';
-import '../requests/feed_request.dart';
 
 class GroupPropertiesRepository {
   HttpProvider httpProvider = HttpProvider(

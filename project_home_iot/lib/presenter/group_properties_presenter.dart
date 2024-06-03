@@ -12,15 +12,16 @@ class GroupPropertiesPresenter extends ChangeNotifier {
 
   List<DeviceObject> deviceObject = [];
 
-  List<dynamic> color = [];
-  List<dynamic> speed = [];
-
   void getDeviceObject() async {
     final res = await _groupPropertiesRepository.getGroupProperties(
         AdafruitConstants.username, AdafruitConstants.groupDeviceKey);
     final res1 = await _groupPropertiesRepository.getGroupProperties(
         AdafruitConstants.username, AdafruitConstants.groupDeviceListKey);
+
     final List<DeviceObject> device = [];
+    int colorIndex = 0;
+    int speedIndex = 0;
+
     List<dynamic> name = [];
     List<dynamic> status = [];
     List<dynamic> room = [];
@@ -49,17 +50,21 @@ class GroupPropertiesPresenter extends ChangeNotifier {
     }
 
     for (int i = 0; i < name.length; i++) {
+      String deviceName = name[i].first;
       device.add(DeviceObject(
           name: name[i],
           status: status[i],
           room: room[i],
           image: image[i],
-          value: value[i]));
+          speed: (deviceName.contains('fan') ? speed[speedIndex++] : []),
+          value: value[i],
+          color: (deviceName.contains('light') ? color[colorIndex++] : [])));
     }
     deviceObject = device;
-    this.color = color;
-    this.speed = speed;
     notifyListeners();
   }
 
+  String getDeviceName(int index) {
+    return deviceObject[index].name.first;
+  }
 }

@@ -6,11 +6,11 @@ class HttpProvider {
   final Map<String, dynamic>? queryParameters;
   late final Dio _dio;
 
-  HttpProvider({required this.baseUrl, this.header,this.queryParameters}) {
+  HttpProvider({required this.baseUrl, this.header, this.queryParameters}) {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       headers: header,
-      queryParameters: queryParameters,
+      queryParameters: queryParameters
     ));
   }
 
@@ -27,9 +27,22 @@ class HttpProvider {
     }
   }
 
-   Future<bool> post(String path, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> getwithQueryParameters(String path,Map<String, dynamic> queryParameter ) async {
     try {
-        final res = await _dio.post<Map<String, dynamic>>(path,data: data );
+      final res = await _dio.get<Map<String, dynamic>>(path,queryParameters: queryParameter);
+      if (res.statusCode != null &&
+          (res.statusCode! >= 200 || res.statusCode! <= 299)) {
+        return res.data ?? {};
+      }
+      return {};
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> post(String path, Map<String, dynamic> data) async {
+    try {
+      final res = await _dio.post<Map<String, dynamic>>(path, data: data);
       if (res.statusCode != null &&
           (res.statusCode! >= 200 || res.statusCode! <= 299)) {
         return true;
@@ -39,5 +52,4 @@ class HttpProvider {
       rethrow;
     }
   }
-
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:project_home_iot/model/objects/device_object.dart';
 import 'package:project_home_iot/presenter/group_properties_presenter.dart';
 import 'package:project_home_iot/shared/color_constants.dart';
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp>{
   GroupPropertiesPresenter groupPropertiesPresenter = GroupPropertiesPresenter();
 
 
+
   @override
   void initState() {
     groupPropertiesPresenter.getDeviceObject();
@@ -37,6 +39,7 @@ class _MyAppState extends State<MyApp>{
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
         create: (_) => groupPropertiesPresenter,
         child: MaterialApp(
