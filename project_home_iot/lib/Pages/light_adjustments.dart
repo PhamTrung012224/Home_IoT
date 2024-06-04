@@ -25,7 +25,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
   @override
   void initState() {
     super.initState();
-    colorPicker = ColorConstants.normalWhite;
+    colorPicker = Color(int.parse(widget.deviceObject!.color!.last.replaceFirst('#', '0xff')));
   }
 
   @override
@@ -166,7 +166,7 @@ class _LightAdjustmentsPageState extends State<LightAdjustmentsPage> {
                   onPressed: () {
                     _feedPresenter.sendLatestData(
                         widget.deviceObject!.color!.first,
-                        colorPicker.toString());
+                      '#${colorPicker!.value.toRadixString(16).substring(2)}');
                   },
                   child: Text(
                     'Send',

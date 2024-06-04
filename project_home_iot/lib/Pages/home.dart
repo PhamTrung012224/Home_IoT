@@ -485,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                               listen: false)
                           .getDeviceObject();
                     });
-                  } else {
+                  } else if(properties.getDeviceName(index).contains('light')){
                     Navigator.of(context)
                         .push(MaterialPageRoute(
                       builder: (context) => LightAdjustmentsPage(
